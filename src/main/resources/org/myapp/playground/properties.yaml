@@ -1,0 +1,11 @@
+TODAY_RTM_FRAMES:
+    default:
+        XPATH: //div[@class="framing row"]/*[@id="rtmDF"]
+
+TODAY_DEALS:
+    default:
+        XPATH: //*[@class="dydl horizontal-daily-deals"]
+
+TODAY_NAVIGATION_UNDERLINED:
+    default:
+        XPATH: //div[@class="topnav"]//*[@class="section today cat active"]
