@@ -1,4 +1,4 @@
-package org.myapp.playground;
+package org.myapp.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
