@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 public class TestSelenium {
 
@@ -20,6 +21,13 @@ public class TestSelenium {
 		WebElement node = driver.findElement(By.cssSelector("div.heros-heading"));
 		
 		WebElement elem = node.findElement(By.cssSelector("h2"));
+		for (WebElement one : driver.findElements(By.cssSelector("#content span.thumb"))) {
+			RemoteWebElement rmnode = (RemoteWebElement) one;
+			System.out.println(rmnode + " " + rmnode.getId());
+		}
+		
+		String html = driver.getPageSource();
+		
 		
 		System.out.println(elem);
 		
