@@ -1,5 +1,9 @@
 package org.myapp.playground;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +17,8 @@ import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 public class TestJsoup {
@@ -20,7 +26,7 @@ public class TestJsoup {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static Map parseUrl() throws Exception {
 		// String strUrl = "http://www.ebay.de/sch/i.html?_nkw=oil";
-		//String strUrl = "http://www.ebay.de/sch/i.html?_nkw=EEK%20A%20LED";
+		// String strUrl = "http://www.ebay.de/sch/i.html?_nkw=EEK%20A%20LED";
 		String strUrl = "http://www.ebay.co.uk/sch/i.html?_nkw=iphone";
 
 		URL url = new URL(strUrl);
@@ -36,10 +42,9 @@ public class TestJsoup {
 			obj.put("price", elem.select(".lvprice").text());
 			obj.put("ppu", elem.select(".lvprice .ppu").text());
 			obj.put("lvsubtitle", elem.select(".lvsubtitle").text());
-			
+
 			Elements lstE = elem.select(".timeleft");
 			System.out.println("HEHE: " + lstE);
-			
 
 			// if (obj.get("ppu").equals("") == false)
 			System.out.println(obj);
@@ -60,7 +65,7 @@ public class TestJsoup {
 		 */
 		return ret;
 	}
-	
+
 	public static void handleUrl() throws Exception {
 		String strUrl = "http://www.ebay.de/sch/i.html?_nkw=EEK%20A%20LED";
 
@@ -71,16 +76,75 @@ public class TestJsoup {
 		System.out.println(url.getHost());
 	}
 
+	public static void parseHtml() {
+		// String html =
+		// "<td class=\"data\">flagSetId=666&amp;bitPosition=14&amp;value=false</td>";
+		String html = "<div class=\"data\">flagSetId=666&amp;bitPosition=14&amp;value=false</div>";
+		Element elem = Jsoup.parse("");
+
+		List<Node> lstNode = Parser.parseFragment(html, elem, "");
+
+		elem.html(html);
+		System.out.println(elem);
+		System.out.println(elem.html());
+	}
+
+	public static void runCmd() throws IOException {
+		Runtime rt = Runtime.getRuntime();
+		String[] commands = { "javac" };
+		Process proc = rt.exec(commands);
+
+		BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+		// read the output from the command
+		System.out.println("Here is the standard output of the command:\n");
+		String s = null;
+		while ((s = stdInput.readLine()) != null) {
+			System.out.println(s);
+		}
+
+		// read any errors from the attempted command
+		System.out.println("Here is the standard error of the command (if any):\n");
+		while ((s = stdError.readLine()) != null) {
+			System.out.println(s);
+		}
+	}
+
+	public static void runCmd1() {
+		try {
+			// Use a ProcessBuilder
+			ProcessBuilder pb = new ProcessBuilder("dir");
+
+			Process p = pb.start();
+			InputStream is = p.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				System.out.println(line);
+			}
+			int r = p.waitFor(); // Let the process finish.
+			if (r == 0) { // No error
+				// run cmd2.
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		//handleUrl();
-		parseUrl();
-		
+		// handleUrl();
+		// parseUrl();
+		// parseHtml();
+		runCmd1();
+
 		/*
-		String url = "http://www.ebay.com/itm/Apple-iPhone-4s-8GB-16GB-32GB-Black-White-Factory-Unlocked-Smartphone-/331489884310";
-		String[] arStr = url.split("/");
-		System.out.println(arStr[arStr.length-1]);
-		*/	
+		 * String url =
+		 * "http://www.ebay.com/itm/Apple-iPhone-4s-8GB-16GB-32GB-Black-White-Factory-Unlocked-Smartphone-/331489884310"
+		 * ; String[] arStr = url.split("/");
+		 * System.out.println(arStr[arStr.length-1]);
+		 */
 
 	}
 
