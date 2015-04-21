@@ -15,7 +15,13 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.jayway.jsonpath.JsonPath;
 
 public class LoadYamlPropertyFile {
 	public String retPropertyFileNio(String filename, String encodeName) {
@@ -31,11 +37,26 @@ public class LoadYamlPropertyFile {
 		return data;
 	}
 
+	public static String getPropertyFileString(String filename, String encodeName) {
+		InputStream in = LoadYamlPropertyFile.class.getClassLoader().getResourceAsStream(filename);
+		String data = null;
+		try {
+			if (encodeName == null) encodeName = "UTF8";
+			data = IOUtils.toString(in, encodeName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(in);
+		}
+		return data;
+	}
+
 	public String retPropertyFileIOUtils(String filename, String encodeName) {
 		InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
 		String data = null;
 		try {
-			data = IOUtils.toString(in);
+			if (encodeName == null) encodeName = "UTF8";
+			data = IOUtils.toString(in, encodeName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -129,20 +150,36 @@ public class LoadYamlPropertyFile {
 		return Arrays.asList(array);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 
 		// InputStream in =
 		// this.getClass().getResourceAsStream("/com/ebay/playground/TodayLactors.yaml");
-		LoadYamlPropertyFile ly = new LoadYamlPropertyFile();
 
-		ly.loadYaml();
+		// LoadYamlPropertyFile ly = new LoadYamlPropertyFile();
 
-		List<String> list = splitString("AA,BB,CC", ",");
-		System.out.println(list.getClass().getName());
+		// ly.loadYaml();
 
-		for (String str : splitString("AA,BB,CC", ",")) {
-			System.out.println(str);
-		}
+		String filename = "org/myapp/playground/properties.yaml";
+		String text = getPropertyFileString(filename, null);
+		System.out.println(text);
+		
+		Yaml yaml = new Yaml();
+		Map<String, Object> mpYaml = (Map<String, Object>) yaml.load(getPropertyFileString(filename, null));
+		JSONObject obj = new JSONObject(mpYaml);
+		System.out.println(obj);
+		
+		JsonObject newObj = new JsonParser().parse(obj.toString()).getAsJsonObject();
+		System.out.println(newObj);
+		
+		System.out.println(JsonPath.read(obj.toString(), "$.AAA[1]"));
+
+		// List<String> list = splitString("AA,BB,CC", ",");
+		// System.out.println(list.getClass().getName());
+		//
+		// for (String str : splitString("AA,BB,CC", ",")) {
+		// System.out.println(str);
+		// }
 
 		// Vector<String> vctName = new
 		// Vector<String>(Arrays.asList("a","b","c"));

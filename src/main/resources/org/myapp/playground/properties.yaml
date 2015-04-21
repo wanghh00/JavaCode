@@ -9,3 +9,8 @@ TODAY_DEALS:
 TODAY_NAVIGATION_UNDERLINED:
     default:
         XPATH: //div[@class="topnav"]//*[@class="section today cat active"]
+
+AAA:
+    - 123
+    - 456
+    - abc
